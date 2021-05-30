@@ -5,6 +5,7 @@ import { TypegooseModule } from 'nestjs-typegoose';
 import { User } from 'src/model/user.model';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { JwtStrategy } from './jwt.strategy';
 
 @Module({
     imports: [
@@ -23,11 +24,26 @@ import { AuthService } from './auth.service';
                 signOptions: {
                     expiresIn: '3m',
                 },
+                // what is the parenthesis "({})"
+                // -- it is a shorthand for one-line code sytax to return an object
+                //
+                // (m) => m.data
+                // this is a shorthand for (m) => { return m.data }
+                //
+                // (m) => ({ m.data, m.moreDate }),
+                // this is a shorthand for
+                //
+                // (m) => {
+                //    return {
+                //       m.data,
+                //       m.moreData
+                //    }
+                // }
             }),
             inject: [ConfigService],
         }),
     ],
     controllers: [AuthController],
-    providers: [AuthService],
+    providers: [AuthService, JwtStrategy],
 })
 export class AuthModule {}

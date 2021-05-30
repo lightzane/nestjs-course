@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Res } from '@nestjs/common';
+import { Body, Controller, Logger, Post, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Response } from 'express';
 
@@ -8,12 +8,13 @@ import {
     ApiTags,
     ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { User } from 'src/model/user.model';
 
 @Controller()
 @ApiTags('auth')
 export class AuthController {
     constructor(private readonly auth: AuthService) {}
+
+    private readonly logger = new Logger('AuthController', true);
 
     @Post('logout')
     @ApiResponse({
@@ -24,8 +25,9 @@ export class AuthController {
         res.clearCookie('accessToken', {
             httpOnly: true,
             sameSite: true,
+            secure: true,
         });
-        console.log('logging out');
+        this.logger.debug('Someone is logging out...');
         return res.json();
     }
 
@@ -42,20 +44,6 @@ export class AuthController {
         @Body('email') email: string,
         @Body('password') password: string,
     ) {
-        let token = await this.auth.login(email, password);
-
-        if (token) {
-            try {
-                res.cookie('accessToken', token['authJwtToken'], {
-                    httpOnly: true,
-                    expires: new Date(new Date().getTime() + 30 * 1000), // expires 30s from now
-                    sameSite: true,
-                });
-
-                return res.json(token);
-            } catch (err) {
-                throw err;
-            }
-        }
+        return await this.auth.login(email, password, res);
     }
 }

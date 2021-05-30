@@ -13,6 +13,10 @@ import { Observable } from 'rxjs';
  */
 @Injectable()
 export class LightzaneAuthenticationGuard implements CanActivate {
+    //
+    // NOTE:
+    // this guard has been replaced by the jwt auth guard!
+
     canActivate(
         context: ExecutionContext,
     ): boolean | Promise<boolean> | Observable<boolean> {

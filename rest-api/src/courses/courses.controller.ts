@@ -19,6 +19,7 @@ import { Course } from '../model/course.model';
 import { LightzaneAuthenticationGuard } from 'src/guards/authentication.guard';
 import { LighzaneAdminGuard } from 'src/guards/admin.guard';
 import { ApiBasicAuth, ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 
 @Controller('courses')
 // @UseFilters(new LightzaneHttpExceptionFilter())
@@ -27,7 +28,8 @@ import { ApiBasicAuth, ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
  * or --
  * for GLOBAL usage, apply it to the main.ts
  *  */
-@UseGuards(LightzaneAuthenticationGuard)
+// @UseGuards(LightzaneAuthenticationGuard)
+@UseGuards(JwtAuthGuard)
 @ApiTags('courses')
 export class CoursesController {
     constructor(private readonly coursesService: CoursesService) {}

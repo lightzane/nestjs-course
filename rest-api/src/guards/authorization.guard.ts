@@ -3,6 +3,7 @@ import {
     ExecutionContext,
     ForbiddenException,
     Injectable,
+    Logger,
 } from '@nestjs/common';
 import { Request } from 'express';
 import { Observable } from 'rxjs';
@@ -11,6 +12,8 @@ import { Observable } from 'rxjs';
 export class LightzaneAuthorizationGuard implements CanActivate {
     constructor(private allowedRoles: string[]) {}
 
+    private readonly logger = new Logger('AuthorizationGuard', true);
+
     canActivate(
         context: ExecutionContext,
     ): boolean | Promise<boolean> | Observable<boolean> {
@@ -18,7 +21,7 @@ export class LightzaneAuthorizationGuard implements CanActivate {
         const req = host.getRequest<Request>();
         const user = req['user'];
 
-        const allowed = this.isAllowed(user.roles);
+        const allowed = this.isAllowed(user['roles']);
 
         console.log('executing authorization.guard.ts');
         console.log('console-lighzane: checking isAllowed: ', allowed);
